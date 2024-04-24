@@ -9,7 +9,6 @@ export const handleOnSearch = (string) => {
     (monster) => monster.name === string
   );
   const result = monster ? monster.index : { index: "NOT FOUND" };
-  console.log(result);
   return result;
 };
 
