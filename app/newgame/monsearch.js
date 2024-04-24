@@ -1,93 +1,97 @@
-"use client"
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+"use client";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { React, useState, useEffect } from "react";
-import monstersData from './monsters.json';
+import monstersData from "./monsters.json";
+import Monster from "./monster";
 
+export const handleOnSearch = (string) => {
+  const monster = monstersData.monsters.find(
+    (monster) => monster.name === string
+  );
+  const result = monster ? monster.index : { index: "NOT FOUND" };
+  //console.log(result);
+  return result;
+};
 
-    export const handleOnSearch = (string) => {
-      const monster = monstersData.monsters.find(
-        (monster) => monster.name === string
-      );
-      const result = monster ? monster.index : { index: "NOT FOUND" };
-      console.log(result);
-      return result;
-    }
-export default function MonsterSearch() {
-    const [guess, setGuess] = useState("");
-    const [selectedMonster, setSelectedMonster] = useState(null);
+export default function MonsterSearch({ monst }) {
+  const [guess, setGuess] = useState("");
+  const [selectedMonster, setSelectedMonster] = useState(null);
+  const [isCorrectGuess, setIsCorrectGuess] = useState(false);
 
-    // Update selectedMonster whenever a new monster is selected in the autocomplete
-    const handleOnSelect = (item) => {
-        setSelectedMonster(item.name);
-    }
+  const handleOnSelect = (item) => {
+    setSelectedMonster(item.name);
+  };
 
-    const loadGuess = async () => {
-      const newGuess = await fetchGuess(selectedMonster);
-      setGuess(newGuess);
-  }
+  const loadGuess = async () => {
+    const newGuess = await fetchGuess(selectedMonster);
+    setGuess(newGuess);
+  };
 
   useEffect(() => {
-      loadGuess();
+    loadGuess();
   }, [selectedMonster]);
 
-    const handleOnFocus = () => {
-        console.log('Focused')
-    }
-    
-    const formatResult = (item) => {
-    return (
-        <>
-        <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
-        </>
-        )
-    }
+  const handleOnFocus = () => {
+    console.log("Focused");
+  };
 
+  const formatResult = (item) => {
     return (
-        <div className="items-container">
-        <header className="flex flex-row m-2">
-          <div style={{ width: 300 }}>
-            <ReactSearchAutocomplete
-              items={monstersData.monsters}
-              resultStringKeyName="name"
-              onSearch={handleOnSearch}
-              onSelect={handleOnSelect}
-              onFocus={handleOnFocus}
-              autoFocus
-              formatResult={formatResult}
-              showIcon={false}
-              placeholder="Search for a monster"
-            />          
-          </div>
-        </header>
-        <div className="items-container">
-            <div className="sum-container">
-                <div className="sum-text">NAME</div>
-                <div className="sum-text">SIZE</div>
-                <div className="sum-text">TYPE</div>
-                <div className="sum-text">HP</div>
-                <div className="sum-text">SPD</div>
-                <div className="sum-text">STR</div>
-                <div className="sum-text">DEX</div>
-                <div className="sum-text">CON</div>
-                <div className="sum-text">INT</div>
-                <div className="sum-text">WIS</div>
-                <div className="sum-text">CHAR</div>
-            </div>
-            <div className="sum-container">
-                <div className="sum-text">{guess.name}</div>
-                <div className="sum-text">{guess.size}</div>
-            </div>
+      <>
+        <span style={{ display: "block", textAlign: "left" }}>{item.name}</span>
+      </>
+    );
+  };
+
+  useEffect(() => {
+    if (monst && guess) {
+      setIsCorrectGuess(guess.name === monst.name);
+    }
+  }, [monst, guess]);
+
+  return (
+    <div className="items-container">
+      <header className="flex flex-col m-2 items-center">
+        <div style={{ width: 300 }}>
+          <ReactSearchAutocomplete
+            items={monstersData.monsters}
+            resultStringKeyName="name"
+            onSearch={handleOnSearch}
+            onSelect={handleOnSelect}
+            onFocus={handleOnFocus}
+            autoFocus
+            formatResult={formatResult}
+            showIcon={false}
+            placeholder="Search for a monster"
+          />
+        </div>
+      </header>
+      <div className="items-container">
+        <div className="sum-container">
+          <div className="sum-text">NAME</div>
+          <div className="sum-text">SIZE</div>
+          <div className="sum-text">TYPE</div>
+          <div className="sum-text">HP</div>
+          <div className="sum-text">STR</div>
+          <div className="sum-text">DEX</div>
+          <div className="sum-text">CON</div>
+          <div className="sum-text">INT</div>
+          <div className="sum-text">WIS</div>
+          <div className="sum-text">CHAR</div>
+        </div>
+        <div className="sum-container">
+          <Monster guess={guess} />
         </div>
       </div>
-    );
+    </div>
+  );
 }
-
 
 async function fetchGuess(searchString) {
   const result = handleOnSearch(searchString);
-  const response = await fetch("https://www.dnd5eapi.co/api/monsters/" + result);
+  const response = await fetch(
+    "https://www.dnd5eapi.co/api/monsters/" + result
+  );
   const monGuess = await response.json();
-  console.log("The Guess" + monGuess);
   return monGuess;
 }
-//          <button onClick={handleOnSearch} className="bg-amber-900 hover:bg-amber-700 text-white font-bold rounded border-4 border-amber-950 mx-4 p-4">Guess!</button>
