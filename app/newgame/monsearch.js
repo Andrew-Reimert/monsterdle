@@ -9,14 +9,13 @@ export const handleOnSearch = (string) => {
     (monster) => monster.name === string
   );
   const result = monster ? monster.index : { index: "NOT FOUND" };
-  //console.log(result);
+  console.log(result);
   return result;
 };
 
 export default function MonsterSearch({ monst }) {
   const [guess, setGuess] = useState("");
   const [selectedMonster, setSelectedMonster] = useState(null);
-  const [isCorrectGuess, setIsCorrectGuess] = useState(false);
 
   const handleOnSelect = (item) => {
     setSelectedMonster(item.name);

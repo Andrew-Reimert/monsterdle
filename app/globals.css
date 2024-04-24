@@ -32,6 +32,18 @@ body {
   }
 }
 
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  border: 4px solid rgb(100, 57, 24);
+  margin-top: 2rem;
+  padding: 3rem;
+  border-radius: 0.25rem;
+}
+
 .sum-text {
   width: 6rem;
   text-align: center;
@@ -96,10 +108,11 @@ body {
 
 .win-box {
   width: fit-content;
+  height: fit-content;
   text-align: center;
-  font-size: 1rem;
+  font-size: 3rem;
   line-height: 1.75rem;
-  padding: 0.5rem;
+  padding: 1rem;
   margin: 0.5rem;
   border: 3px solid green;
   background-color: rgba(0, 74, 0, 0.345);

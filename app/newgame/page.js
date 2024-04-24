@@ -1,7 +1,4 @@
 import React from "react";
-import { Inter } from "next/font/google";
-import Monster from "./monster";
-import MonsterGuess from "./monsterguess";
 import MonsterSearch from "./monsearch";
 
 export default function Home() {
@@ -13,7 +10,7 @@ export default function Home() {
           <a href="./">MONSTERDLE</a>
         </h1>
 
-        <div className="flex items-center flex-col w-fit p-12 mt-8 border-4 rounded">
+        <div className="home-container">
           <div className="p-4"></div>
           <div className="p-4">
             <MonsterSearch />

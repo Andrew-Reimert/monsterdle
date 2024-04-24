@@ -3,11 +3,21 @@ import { useState, useEffect } from "react";
 import monstersData from "./monsters.json";
 
 const StatDisplay = ({ label, guessValue, monsterValue }) => {
-  const isCorrect = guessValue === monsterValue;
+  let isCorrect;
+  let arrow;
+  if (label === "NAME" || label === "TYPE" || label === "SIZE") {
+    isCorrect = guessValue === monsterValue;
+  } else {
+    isCorrect = parseInt(guessValue) >= parseInt(monsterValue);
+    arrow = isCorrect ? "↓" : "↑";
+    if (parseInt(guessValue) === parseInt(monsterValue)) {
+      arrow = null;
+    }
+  }
 
   return (
     <div className={`sum-text ${isCorrect ? "sum-correct" : "sum-wrong"}`}>
-      {guessValue}
+      {guessValue} {arrow && <span className="arrow">{arrow}</span>}
     </div>
   );
 };
@@ -36,56 +46,80 @@ export default function Monster({ guess }) {
   }, []);
 
   useEffect(() => {
+    //please forgive the yanderedev code
     if (monst && guess) {
       const isCorrect =
         guess.name === monst.name &&
         guess.size === monst.size &&
         guess.type === monst.type &&
-        guess.hit_points === monst.hit_points &&
-        guess.strength === monst.strength &&
-        guess.dexterity === monst.dexterity &&
-        guess.constitution === monst.constitution &&
-        guess.intelligence === monst.intelligence &&
-        guess.wisdom === monst.wisdom &&
-        guess.charisma === monst.charisma;
-
+        parseInt(guess.hit_points) >= parseInt(monst.hit_points) &&
+        parseInt(guess.strength) >= parseInt(monst.strength) &&
+        parseInt(guess.dexterity) >= parseInt(monst.dexterity) &&
+        parseInt(guess.constitution) >= parseInt(monst.constitution) &&
+        parseInt(guess.intelligence) >= parseInt(monst.intelligence) &&
+        parseInt(guess.wisdom) >= parseInt(monst.wisdom) &&
+        parseInt(guess.charisma) >= parseInt(monst.charisma);
       setIsCorrectGuess(isCorrect);
     }
   }, [monst, guess]);
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <div className="sum-container">
-        <StatDisplay guessValue={guess.name} monsterValue={monst.name} />
-        <StatDisplay guessValue={guess.size} monsterValue={monst.size} />
-        <StatDisplay guessValue={guess.type} monsterValue={monst.type} />
         <StatDisplay
+          label="NAME"
+          guessValue={guess.name}
+          monsterValue={monst.name}
+        />
+        <StatDisplay
+          label="SIZE"
+          guessValue={guess.size}
+          monsterValue={monst.size}
+        />
+        <StatDisplay
+          label="TYPE"
+          guessValue={guess.type}
+          monsterValue={monst.type}
+        />
+        <StatDisplay
+          label="HP"
           guessValue={guess.hit_points}
           monsterValue={monst.hit_points}
         />
         <StatDisplay
+          label="STR"
           guessValue={guess.strength}
           monsterValue={monst.strength}
         />
         <StatDisplay
+          label="DEX"
           guessValue={guess.dexterity}
           monsterValue={monst.dexterity}
         />
         <StatDisplay
+          label="CON"
           guessValue={guess.constitution}
           monsterValue={monst.constitution}
         />
         <StatDisplay
+          label="INT"
           guessValue={guess.intelligence}
           monsterValue={monst.intelligence}
         />
-        <StatDisplay guessValue={guess.wisdom} monsterValue={monst.wisdom} />
         <StatDisplay
+          label="WIS"
+          guessValue={guess.wisdom}
+          monsterValue={monst.wisdom}
+        />
+        <StatDisplay
+          label="CHAR"
           guessValue={guess.charisma}
           monsterValue={monst.charisma}
         />
       </div>
-      {isCorrectGuess && <div className="win-box">Correct! You Win!</div>}
+      {isCorrectGuess && (
+        <div className="win-box">The Monster was {monst.name} You Win!</div>
+      )}
     </div>
   );
 }
@@ -99,5 +133,6 @@ async function fetchMonster() {
     "https://www.dnd5eapi.co/api/monsters/" + randomMon
   );
   const monster = await response.json();
+  console.log(monster.name);
   return monster;
 }
