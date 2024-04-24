@@ -12,7 +12,7 @@ export default function Home() {
           <h2 className="text-2xl p-4 m-4">Welcome to the Monsterdle!</h2>
           <p className="text-center">
             This game is designed to test your knowledge of all
-            monster/creatures in Dungeons and Dragons 5e! Use a monster's stats,
+            monster/creatures in Dungeons and Dragons 5e! Use a monsters stats,
             size, hit points, and more to figure out the correct answer!
           </p>
 
